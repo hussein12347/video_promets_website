@@ -1,0 +1,40 @@
+/* ===== NEW TRANSITIONS (canvas compositing, createRuntime scope) ===== */
+const NEWTR=(function(){
+  const cl=(x,a,b)=>Math.max(a,Math.min(b,x)); const sm=x=>{ x=cl(x,0,1); return x*x*(3-2*x); };
+  const blur=(c,px)=>{ if(px>0.4&&'filter' in c&&!liteNow) c.filter='blur('+px.toFixed(1)+'px)'; };
+  const bounce=x=>{ const n=7.5625,d=2.75; if(x<1/d) return n*x*x; if(x<2/d){ x-=1.5/d; return n*x*x+0.75; } if(x<2.5/d){ x-=2.25/d; return n*x*x+0.9375; } x-=2.625/d; return n*x*x+0.984375; };
+  const back=x=>{ const c1=1.70158,c3=c1+1; return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2); };
+  const T={};
+  T['cross-zoom']=(c,W,H,A,B,p,l)=>{ const bl=W*0.03*Math.sin(Math.PI*l);
+    c.save(); blur(c,bl); c.translate(W/2,H/2); let s=1+p*0.6; c.scale(s,s); c.drawImage(A,-W/2,-H/2); c.restore();
+    c.save(); blur(c,bl); c.globalAlpha=p; c.translate(W/2,H/2); s=1.45-0.45*p; c.scale(s,s); c.drawImage(B,-W/2,-H/2); c.restore(); };
+  T['zoom-through']=(c,W,H,A,B,p,l)=>{ c.save(); c.translate(W/2,H/2); let s=0.7+0.3*p; c.scale(s,s); c.drawImage(B,-W/2,-H/2); c.restore();
+    c.save(); blur(c,W*0.02*Math.sin(Math.PI*l)); c.globalAlpha=1-sm(p); c.translate(W/2,H/2); s=1+p*1.6; c.scale(s,s); c.drawImage(A,-W/2,-H/2); c.restore(); };
+  T['blur-dissolve']=(c,W,H,A,B,p)=>{ c.save(); blur(c,W*0.035*Math.sin(Math.PI*p)); c.drawImage(A,0,0); c.globalAlpha=p; c.drawImage(B,0,0); c.restore(); };
+  T['film-burn']=(c,W,H,A,B,p,l)=>{ c.drawImage(A,0,0); c.globalAlpha=sm(l); c.drawImage(B,0,0); c.globalAlpha=1;
+    const e=Math.sin(Math.PI*l); c.globalCompositeOperation='lighter'; const R=Math.hypot(W,H)*(0.3+0.9*e);
+    const g=c.createRadialGradient(W*0.85,H*0.15,0,W*0.85,H*0.15,R); g.addColorStop(0,'rgba(255,235,170,'+Math.min(1,e*1.5)+')'); g.addColorStop(0.35,'rgba(255,120,30,'+(e*0.9)+')'); g.addColorStop(1,'rgba(120,10,0,0)');
+    c.fillStyle=g; c.fillRect(0,0,W,H); c.fillStyle='rgba(255,220,160,'+(Math.pow(e,6)*0.7)+')'; c.fillRect(0,0,W,H); };
+  T['clock']=(c,W,H,A,B,p)=>{ c.drawImage(A,0,0); c.beginPath(); c.moveTo(W/2,H/2); c.arc(W/2,H/2,Math.hypot(W,H),-Math.PI/2,-Math.PI/2+2*Math.PI*p); c.closePath(); c.clip(); c.drawImage(B,0,0); };
+  T['split-h']=(c,W,H,A,B,p)=>{ c.drawImage(B,0,0); c.drawImage(A,0,0,W/2,H,-W/2*p,0,W/2,H); c.drawImage(A,W/2,0,W/2,H,W/2+W/2*p,0,W/2,H); };
+  T['split-v']=(c,W,H,A,B,p)=>{ c.drawImage(B,0,0); c.drawImage(A,0,0,W,H/2,0,-H/2*p,W,H/2); c.drawImage(A,0,H/2,W,H/2,0,H/2+H/2*p,W,H/2); };
+  T['open-h']=(c,W,H,A,B,p)=>{ c.drawImage(A,0,0); c.beginPath(); c.rect(W/2*(1-p),0,W*p,H); c.clip(); c.drawImage(B,0,0); };
+  T['open-v']=(c,W,H,A,B,p)=>{ c.drawImage(A,0,0); c.beginPath(); c.rect(0,H/2*(1-p),W,H*p); c.clip(); c.drawImage(B,0,0); };
+  T['iris-box']=(c,W,H,A,B,p)=>{ c.drawImage(A,0,0); c.beginPath(); c.rect(W/2*(1-p),H/2*(1-p),W*p,H*p); c.clip(); c.drawImage(B,0,0); };
+  T['slice-h']=(c,W,H,A,B,p)=>{ c.drawImage(A,0,0); const n=7; for(let i=0;i<n;i++){ const q=sm(p*1.7-(i/n)*0.7), ox=(i%2?1:-1)*W*(1-q), y0=Math.floor(H*i/n), y1=Math.floor(H*(i+1)/n)+1; c.drawImage(B,0,y0,W,y1-y0,ox,y0,W,y1-y0); } };
+  T['stripes']=(c,W,H,A,B,p)=>{ c.drawImage(A,0,0); const n=9; for(let i=0;i<n;i++){ const q=sm(p*1.7-(i/n)*0.7), oy=(i%2?1:-1)*H*(1-q), x0=Math.floor(W*i/n), x1=Math.floor(W*(i+1)/n)+1; c.drawImage(B,x0,0,x1-x0,H,x0,oy,x1-x0,H); } };
+  T['mosaic']=(c,W,H,A,B,p)=>{ c.drawImage(A,0,0); const cols=12, rows=Math.max(4,Math.round(cols*H/W)), cw=W/cols, rh=H/rows; c.beginPath(); for(let i=0;i<cols;i++) for(let j=0;j<rows;j++){ if(hash(i*31+j*17+3)<p*1.02) c.rect(i*cw-0.5,j*rh-0.5,cw+1,rh+1); } c.clip(); c.drawImage(B,0,0); };
+  T['rgb-split']=(c,W,H,A,B,p,l)=>{ const src=l<0.5?A:B, a=Math.sin(Math.PI*l); c.drawImage(src,0,0);
+    c.globalCompositeOperation='screen'; c.globalAlpha=0.5*a; c.drawImage(src,-W*0.035*a,0); c.drawImage(src,W*0.035*a,0); c.globalCompositeOperation='source-over'; c.globalAlpha=1;
+    const f=Math.floor(l*24); for(let i=0;i<6;i++){ const y=hash(i+f*7)*H, hh=H*(0.02+hash(i*3+f)*0.07), dx=(hash(i*5+f*3)-0.5)*W*0.2*a; c.drawImage(src,0,y,W,hh,dx,y,W,hh); } };
+  const flip=(vert)=>(c,W,H,A,B,p)=>{ const sx=Math.max(0.001,Math.abs(Math.cos(Math.PI*p))); c.fillStyle='#000'; c.fillRect(0,0,W,H); c.save(); c.translate(W/2,H/2); if(vert) c.scale(1+0.04*(1-sx),sx); else c.scale(sx,1+0.04*(1-sx)); c.drawImage(p<0.5?A:B,-W/2,-H/2); c.fillStyle='rgba(0,0,0,'+(0.55*(1-sx))+')'; c.fillRect(-W/2,-H/2,W,H); c.restore(); };
+  T['flip-h']=flip(false); T['flip-v']=flip(true);
+  T['cube-left']=(c,W,H,A,B,p)=>{ const x=W*(1-p); if(x>1){ c.drawImage(A,0,0,W,H,0,0,x,H); c.fillStyle='rgba(0,0,0,'+(0.4*p)+')'; c.fillRect(0,0,x,H); } if(W-x>1){ c.drawImage(B,0,0,W,H,x,0,W-x,H); c.fillStyle='rgba(0,0,0,'+(0.4*(1-p))+')'; c.fillRect(x,0,W-x,H); } };
+  T['cube-right']=(c,W,H,A,B,p)=>{ const x=W*p; if(x>1){ c.drawImage(B,0,0,W,H,0,0,x,H); c.fillStyle='rgba(0,0,0,'+(0.4*(1-p))+')'; c.fillRect(0,0,x,H); } if(W-x>1){ c.drawImage(A,0,0,W,H,x,0,W-x,H); c.fillStyle='rgba(0,0,0,'+(0.4*p)+')'; c.fillRect(x,0,W-x,H); } };
+  T['wave']=(c,W,H,A,B,p,l)=>{ const n=48, amp=W*0.07*Math.sin(Math.PI*p); for(let k=0;k<2;k++){ c.globalAlpha=k?p:1; const S=k?B:A; for(let i=0;i<n;i++){ const y0=Math.floor(H*i/n), y1=Math.floor(H*(i+1)/n)+1, ox=Math.sin(i*0.55+l*9)*amp; c.drawImage(S,0,y0,W,y1-y0,ox,y0,W,y1-y0); } } };
+  T['curtain']=(c,W,H,A,B,p)=>{ c.drawImage(A,0,0); c.drawImage(B,0,0,W/2,H,-W/2*(1-p),0,W/2,H); c.drawImage(B,W/2,0,W/2,H,W/2+W/2*(1-p),0,W/2,H); };
+  T['pop-in']=(c,W,H,A,B,p,l)=>{ c.drawImage(A,0,0); const s=Math.max(0.001,back(cl(l,0,1))); c.globalAlpha=cl(l*3,0,1); c.translate(W/2,H/2); c.scale(s,s); c.drawImage(B,-W/2,-H/2); };
+  T['drop-in']=(c,W,H,A,B,p,l)=>{ c.drawImage(A,0,0); const y=-H*(1-bounce(cl(l,0,1))); c.fillStyle='rgba(0,0,0,'+(0.25*cl(l*2,0,1))+')'; c.drawImage(B,0,y); };
+  T['flash-zoom']=(c,W,H,A,B,p,l)=>{ const e=1-Math.pow(Math.abs(2*l-1),2); c.save(); c.translate(W/2,H/2); const s=l<0.5?1+l*0.6:1.3-(l-0.5)*0.6; c.scale(s,s); c.drawImage(l<0.5?A:B,-W/2,-H/2); c.restore(); c.fillStyle='rgba(255,255,255,'+(e*0.92)+')'; c.fillRect(0,0,W,H); };
+  return T; })();
+function transDraw(c,W,H,A,B,type,p){ liteNow=true; try{ c.save(); c.setTransform(1,0,0,1,0,0); c.globalAlpha=1; composite(c,W,H,A,B,type,E['power2.inOut'](Math.max(0,Math.min(1,p))),p); c.restore(); } finally{ liteNow=false; } }

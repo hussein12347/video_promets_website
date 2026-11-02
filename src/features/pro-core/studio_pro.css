@@ -1,0 +1,99 @@
+<style id="studio-pro-css">
+/* ==========================================================================
+   STUDIO PRO — professional NLE layout for the animation editor (≥1000px)
+   tool rail | resizable panel | player | resizable inspector, over a resizable timeline
+   ========================================================================== */
+body.an-route #shell{min-height:0}
+#ed .ed-sep,#ed .ed-split,#ed .ed-pbtn{display:none}
+@container an (min-width:1000px){
+  #ed.ed.pro{--gap:6px;--rad:14px;--rail-w:68px;--sp:8px;
+    --lw-auto:300px;--rw-auto:280px;--tl-auto:clamp(180px,28%,300px);
+    --lw:var(--lw-user,var(--lw-auto));--rw:var(--rw-user,var(--rw-auto));--tlh:var(--tl-user,var(--tl-auto));
+    padding:var(--gap);gap:0;
+    grid-template-columns:minmax(0,1fr);
+    grid-template-rows:auto auto minmax(0,1fr) var(--sp) var(--tlh)}
+  #ed.pro .ed-top{grid-row:1;padding:0 2px 6px}
+  #ed.pro .ed-steps{grid-row:2;padding:0 2px 8px}
+  #ed.pro .ed-body{grid-row:3;gap:0;min-height:0;position:relative;
+    grid-template-columns:var(--rail-w) var(--lw) var(--sp) minmax(0,1fr) var(--sp) var(--rw);
+    grid-template-rows:minmax(0,1fr);
+    grid-template-areas:"rail left sp1 center sp2 right"}
+  #ed.pro>.ed-split{grid-row:4}
+  #ed.pro .ed-tl{grid-row:5}
+  /* tool rail: vertical, grouped */
+  #ed.pro .ed-rail{grid-area:rail;flex-direction:column;align-items:stretch;gap:2px;overflow-y:auto;overflow-x:hidden;padding:8px 6px;scrollbar-width:thin;
+    border:1px solid var(--line);border-inline-end:0;border-radius:0 var(--rad) var(--rad) 0;min-height:0;background:var(--card)}
+  :root[dir=rtl] #ed.pro .ed-rail,[dir=rtl] #ed.pro .ed-rail{border-radius:var(--rad) 0 0 var(--rad)}
+  #ed.pro .ed-rb{flex:0 0 auto;width:100%;min-width:0;padding:9px 2px 7px;gap:4px;font-size:20px;border-radius:12px;position:relative}
+  #ed.pro .ed-rb small{font-size:10px;max-width:100%}
+  #ed.pro .ed-rb.ov,#ed.pro .ed-sep.ov{display:none}
+  #ed.pro .ed-more{flex:0 0 auto;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:9px 2px 7px;font-size:20px;line-height:1;border-radius:12px;background:transparent;color:var(--mut);font-weight:600}
+  #ed.pro .ed-more small{font-size:10px}
+  #ed.pro .ed-more:hover{background:var(--card2);color:var(--ink)}
+  #ed.pro .ed-more.on{background:color-mix(in srgb,var(--acc) 16%,var(--card));color:var(--acc)}
+  #ed.pro .ed-more[hidden]{display:none}
+  #ed.pro .ed-pop{position:absolute;z-index:30;inset-inline-start:calc(var(--rail-w) + 6px);bottom:10px;min-width:210px;max-height:80%;overflow:auto;padding:6px;border-radius:14px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-lg)}
+  #ed.pro .ed-pop[hidden]{display:none}
+  #ed.pro .ed-pi{display:flex;align-items:center;gap:10px;width:100%;min-height:40px;padding:0 12px;border-radius:10px;background:transparent;font-size:13px;text-align:start;justify-content:flex-start}
+  #ed.pro .ed-pi span{font-size:18px;width:24px;text-align:center}
+  #ed.pro .ed-pi.on{background:color-mix(in srgb,var(--acc) 14%,var(--card));color:var(--acc)}
+  #ed.pro .ed-rb.on::before{content:"";position:absolute;inset-block:10px;inset-inline-start:-6px;width:3px;border-radius:3px;background:var(--acc)}
+  #ed.pro .ed-sep{display:block;height:1px;margin:6px 10px;background:var(--line);flex:none}
+  #ed.pro .ed-mob{display:none}
+  /* panel + inspector */
+  #ed.pro .ed-left{grid-area:left;border:1px solid var(--line);border-radius:0 var(--rad) var(--rad) 0;padding:14px 14px 18px;scrollbar-width:thin}
+  [dir=rtl] #ed.pro .ed-left{border-radius:var(--rad) 0 0 var(--rad)}
+  #ed.pro .ed-center{grid-area:center;gap:6px}
+  #ed.pro .ed-right{grid-area:right;border-radius:var(--rad);padding:14px;scrollbar-width:thin}
+  #ed.pro .ed-stage{border-radius:var(--rad);padding:10px}
+  #ed.pro .ed-transport{border-radius:var(--rad);padding:6px 10px}
+  /* splitters */
+  #ed.pro .ed-split{display:flex;align-items:center;justify-content:center;position:relative;z-index:4;touch-action:none;background:transparent}
+  #ed.pro .ed-split::after{content:"";border-radius:4px;background:var(--line);transition:background .12s,transform .12s}
+  #ed.pro .ed-split.v{cursor:col-resize}#ed.pro .ed-split.v::after{width:3px;height:44px}
+  #ed.pro .ed-split.h{cursor:row-resize}#ed.pro .ed-split.h::after{height:3px;width:56px}
+  #ed.pro .ed-split:hover::after,#ed.pro .ed-split.drag::after{background:var(--acc);transform:scale(1.15)}
+  #ed.pro .ed-split:focus-visible{outline:2px solid var(--acc);outline-offset:-2px;border-radius:6px}
+  #ed.pro .ed-body>.ed-split.s1{grid-area:sp1}#ed.pro .ed-body>.ed-split.s2{grid-area:sp2}
+  body.an-dragging,body.an-dragging *{user-select:none!important}
+  /* collapsing */
+  #ed.pro.no-left .ed-body{grid-template-columns:var(--rail-w) 0 0 minmax(0,1fr) var(--sp) var(--rw)}
+  #ed.pro.no-left .ed-left,#ed.pro.no-left .s1{display:none}
+  #ed.pro.no-right .ed-body{grid-template-columns:var(--rail-w) var(--lw) var(--sp) minmax(0,1fr) 0 0}
+  #ed.pro.no-right .ed-right,#ed.pro.no-right .s2{display:none}
+  #ed.pro.no-left.no-right .ed-body{grid-template-columns:var(--rail-w) 0 0 minmax(0,1fr) 0 0}
+  #ed.pro .ed-pbtn{display:inline-flex;width:38px;padding:0;justify-content:center;font-size:16px}
+  #ed.pro .ed-pbtn.on{background:color-mix(in srgb,var(--acc) 16%,var(--card));color:var(--acc)}
+  #ed.pro .ed-top button,#ed.pro .ed-top select{height:36px}
+  #ed.pro .ed-tools{padding-inline:8px;border-inline:1px solid var(--line2)}
+  #ed.pro #ed-export{height:38px}
+}
+@container an (min-width:1180px){ #ed.ed.pro{--lw-auto:330px} #ed.ed.pro.pn-wide{--lw-auto:400px} }
+@container an (min-width:1300px){ #ed.ed.pro{--lw-auto:340px;--rw-auto:290px} #ed.ed.pro.pn-wide{--lw-auto:410px} }
+@container an (min-width:1450px){ #ed.ed.pro{--lw-auto:370px;--rw-auto:320px;--tl-auto:clamp(210px,31%,380px)} #ed.ed.pro.pn-wide{--lw-auto:450px} }
+@container an (min-width:1750px){ #ed.ed.pro{--lw-auto:410px;--rw-auto:350px;--tl-auto:clamp(230px,32%,440px);--rail-w:74px} #ed.ed.pro.pn-wide{--lw-auto:500px} }
+@container an (min-width:2100px){ #ed.ed.pro{--lw-auto:460px;--rw-auto:390px;--tl-auto:clamp(250px,32%,500px);--rail-w:80px} #ed.ed.pro.pn-wide{--lw-auto:560px} }
+@container an (min-width:1000px) and (max-width:1179px){ #ed.ed.pro.pn-wide{--lw-auto:340px} }
+/* below 1300: the inspector is a drawer over the player (opens when you pick an element) */
+@container an (min-width:1000px) and (max-width:1299px){
+  #ed.pro .ed-body,#ed.pro.no-left .ed-body{grid-template-columns:var(--rail-w) var(--lw) var(--sp) minmax(0,1fr) 0 0}
+  #ed.pro.no-left .ed-body{grid-template-columns:var(--rail-w) 0 0 minmax(0,1fr) 0 0}
+  #ed.pro .s2{display:none}
+  #ed.pro .ed-right,#ed.pro.no-right .ed-right{display:none;grid-area:auto;position:absolute;inset-block:0;inset-inline-end:0;width:min(340px,88%);z-index:20;box-shadow:var(--shadow-lg);border:1px solid var(--line)}
+  #ed.pro.insp-open .ed-right{display:block}
+}
+@media (max-height:760px){ @container an (min-width:1000px){ #ed.ed.pro{--tl-auto:clamp(150px,30%,230px)} #ed.pro .st-t small{display:none} #ed.pro .ed-steps{padding-bottom:6px} } }
+@media (min-height:1000px){ @container an (min-width:1000px){ #ed.ed.pro{--tl-auto:clamp(250px,32%,520px)} } }
+@media (max-height:820px){ @container an (min-width:1000px){ #ed.pro .ed-rb{padding:8px 2px}#ed.pro .ed-rb small,#ed.pro .ed-more small{display:none}#ed.pro .ed-rb span{font-size:21px}#ed.pro .ed-more{padding:8px 2px} #ed.pro .ed-sep{margin:4px 12px} } }
+@container an (min-width:1000px) and (max-width:1499px){ #ed.pro #ed-grid,#ed.pro #ed-safe,#ed.pro .ed-eng,#ed.pro #ed-pq{display:none} }
+@container an (min-width:1000px) and (max-width:1499px){ #ed.pro #ed-q,#ed.pro #ed-fps,#ed.pro .an-miss{display:none} #ed.pro .ed-proj{flex-basis:240px;min-width:170px} }
+@container an (min-width:1000px) and (max-width:1299px){ #ed.pro #ed-allimg,#ed.pro #ed-auto{display:none} #ed.pro .ed-proj{flex-basis:200px} }
+#ed .ed-stepsbtn{display:none}
+@media (max-height:780px){ @container an (min-width:1000px){
+  #ed.pro .ed-stepsbtn{display:inline-flex;gap:6px;align-items:center}
+  #ed.pro{grid-template-rows:auto 0 minmax(0,1fr) var(--sp) var(--tlh)}
+  #ed.pro .ed-steps{display:none;grid-row:2;position:absolute;z-index:26;inset-inline:10px;margin-top:52px;padding:10px;border-radius:14px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-lg);overflow:auto}
+  #ed.pro.steps-open .ed-steps{display:block}
+  #ed.pro .st-list{flex-wrap:wrap;min-width:0}
+} }
+</style>

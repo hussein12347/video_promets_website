@@ -1,0 +1,117 @@
+
+/* ===== Layout fix: لا عرض زيادة + تباعد منتظم في لوحات المحرر الجانبية ===== */
+#ed .ed-left,#ed .ed-right{min-width:0;max-width:100%;overflow-x:hidden}
+#ed .ed-left .pn-sec,#ed .qr .pn-sec{min-width:0}
+#ed .ed-left .pn-sec>*,#ed .qr .pn-sec>*{min-width:0;max-width:100%}
+#ed .ed-left .hint{overflow-wrap:anywhere}
+
+/* أزرار الاختيار (segmented): تتوزع في شبكة وتلتف بدل ما تخرج برا الشاشة */
+#ed .mt2-seg{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,120px),1fr));gap:4px;min-width:0;max-width:100%}
+#ed .mt2-seg>button{flex:none;width:100%;min-width:0;height:auto;min-height:38px;padding:8px 10px;white-space:normal;overflow-wrap:anywhere;line-height:1.35;text-align:center}
+#ed #qr-src{grid-template-columns:1fr}            /* مصدر التلاوة: قائمة رأسية واضحة */
+#ed #qr-src>button{text-align:start;justify-content:flex-start}
+
+/* قسم القرآن: عمود واحد بتباعد ثابت */
+#ed .qr{display:flex;flex-direction:column;gap:16px;min-width:0;max-width:100%}
+#ed .qr .pn-sec{display:flex;flex-direction:column;gap:10px;margin:0;padding-top:14px}
+#ed .qr>.pn-sec:first-child{border-top:0;padding-top:0}
+#ed .qr .pn-sec>b{font-size:14px;margin-bottom:2px}
+#ed .qr .mt2-seg{margin:0}
+#ed .qr .pn-col1{display:flex;flex-direction:column;gap:6px}
+#ed .qr .pn-wide{margin-top:2px}
+
+/* مجموعات داخلية (عنوان + عنصر) */
+#ed .qr-um,#ed #qr-ownbox,#ed #qr-wsub{display:flex;flex-direction:column;gap:10px;margin:0;min-width:0}
+#ed .qr-mo-h{margin:6px 0 -4px;font-size:12px;font-weight:700;color:var(--mut)}
+#ed .qr-um-bar{gap:8px;margin:0}
+#ed .qr-up,#ed .qr-clr{max-width:100%;justify-content:center;text-align:center;white-space:normal}
+
+/* القوائم والحقول: ما تتعداش عرض اللوحة */
+#ed .qr select,#ed .qr input:not([type=checkbox]):not([type=range]):not([type=file]){width:100%;min-width:0;max-width:100%;text-overflow:ellipsis}
+#ed .qr select{white-space:nowrap;overflow:hidden}
+#ed .qr .pn-row3,#ed .ed-left .pn-row3{grid-template-columns:repeat(auto-fit,minmax(min(100%,112px),1fr));gap:10px}
+#ed .ed-left .pn-grid2{grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr))}
+
+/* مفاتيح التشغيل (checkbox) كبطاقات مرتبة */
+#ed .qr .an-sw{align-items:flex-start;gap:10px;padding:9px 11px;border:1px solid var(--line2);border-radius:10px;background:var(--card);line-height:1.45;min-width:0}
+#ed .qr .an-sw input{margin-top:2px}
+#ed .qr .an-sw span{min-width:0;overflow-wrap:anywhere}
+
+/* الملاحظات */
+#ed .qr .hint{margin:0;padding:8px 11px;font-size:12px;line-height:1.65;color:var(--mut);background:var(--soft);border-radius:10px;border-inline-start:3px solid color-mix(in srgb,var(--acc) 55%,transparent);max-width:none}
+#ed .qr .hint:empty{display:none}
+
+/* الشرائح والأنماط */
+#ed .qr .lk-row,#ed .lk-row{gap:8px}
+#ed .qr .lk-chip{max-width:100%}
+#ed .qr .qr-bgs{grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px;margin:0}
+#ed .qr .qr-gt{margin:0;scrollbar-width:thin}
+#ed .qr .mt2-more{margin:0}
+#ed .qr .mt2-more>*:not(summary){margin-inline:11px}
+#ed .qr .mt2-more>*:last-child{margin-bottom:11px}
+
+
+/* ==========================================================================
+   SPACING SYSTEM — one rhythm for every list / grid / stack.
+   Fixes elements that touched each other (stat cards joined with 1px gaps,
+   sidebar lists with 1-2px gaps, tabs, option stacks...).
+   Scale: 4 · 8 · 12 · 16 · 24 — nothing smaller than 4px between siblings.
+   ========================================================================== */
+:root{--sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px}
+
+/* ---------- 1) Stat cards: separate floating tiles, not a joined strip ---------- */
+html body .stat-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:var(--sp-4);background:transparent;border:0;border-radius:0;overflow:visible;padding:0;
+  margin-bottom:var(--sp-5)}
+html body .stat-card,html body .stat-card:hover{
+  border:1px solid var(--glass-b,var(--line));border-radius:18px;padding:18px 20px;
+  display:flex;flex-direction:column;gap:var(--sp-2);min-width:0}
+html body .stat-card .l{margin:0;order:1}
+html body .stat-card .n{margin:0;order:2;line-height:1.15}
+html body .stat-card .ic{margin:0 0 var(--sp-1)}
+
+/* ---------- 2) Sidebar: groups and rows breathe ---------- */
+html body .mode-switch{gap:var(--sp-3);padding:var(--sp-3)}
+html body .mode-search{margin-bottom:var(--sp-1)}
+html body .mode-group{display:flex;flex-direction:column;gap:var(--sp-2)}
+html body .mode-group+.mode-group{margin-top:var(--sp-3);padding-top:var(--sp-3)}
+html body .mode-group-head{padding:var(--sp-2) var(--sp-3);margin-bottom:0}
+html body .mode-group-list{gap:var(--sp-2)}
+html body .mode-btn{margin:0;min-height:40px;padding:8px 12px}
+html body .mode-btn.mode-sub{margin-top:0}
+html body .mode-group-label{margin:var(--sp-3) var(--sp-3) var(--sp-1)}
+html body #tools-nav{gap:var(--sp-2);padding:0 var(--sp-1)}
+html body #sidebar nav,html body .nav-list{gap:var(--sp-2)}
+html body .navitem{margin-block:0}
+html body #sidebar .navitem+.navitem{margin-top:var(--sp-1)}
+
+/* ---------- 3) Tabs, wizard steps, chip rows ---------- */
+html body .tabs{gap:var(--sp-2);padding-bottom:var(--sp-2)}
+html body #wizard-steps,html body [id$="-wizard-steps"]{gap:var(--sp-2);padding:0 0 var(--sp-3)}
+html body .tools-row,html body .btn-row,html body .actions,html body .row,html body .chips{gap:var(--sp-2)}
+html body :is(.seg,.mt-seg,.mt2-seg,.lk-row,.ai-mode,.el-cats,.el-chips){gap:var(--sp-2)}
+
+/* ---------- 4) Small vertical stacks that had gap:2px ---------- */
+html body :is(.vs-body,.fd-save>div,.pn-fx,.in-f,.pa-st,.sy-f,.od2-info,.od2-p,.mk-row .mk-t,.pn-tp,.pn-mk button,.dx-side dd,#ed .src-tab){gap:var(--sp-1)}
+html body .vs-body{padding:var(--sp-3) var(--sp-4) var(--sp-4)}
+html body .pn-fx{margin-top:var(--sp-3);gap:var(--sp-2)}
+
+/* ---------- 5) Cards and sections: guaranteed space between siblings ---------- */
+html body :is(.card,.section,.empty,.copybox,.flt-bar,.frame-preview,.fav-recipe)+:is(.card,.section,.empty,.copybox,.flt-bar,.frame-preview,.fav-recipe){margin-top:var(--sp-4)}
+html body :is(.grid,.cards,.char-grid,.style-grid,.vs-grid,.choices,.tool-grid,.fav-grid){gap:var(--sp-4)}
+html body .sec-head{margin-bottom:var(--sp-4)}
+html body .sec-head+*{margin-top:0}
+html body .stat-grid+.sec-head,html body .stat-grid+*{margin-top:var(--sp-5)}
+
+/* ---------- 6) Editor panes keep their divider look but get a gutter ---------- */
+html body #ed .ed-body{gap:var(--sp-2)}
+html body #ed.pro .ed-body{gap:var(--sp-2)}
+html body #ed.pro .ed-rail{gap:var(--sp-1)}
+
+/* ---------- phones: tighter but never touching ---------- */
+@media(max-width:760px){
+  html body .stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--sp-3)}
+  html body .stat-card,html body .stat-card:hover{padding:14px 16px}
+  html body .mode-group-list{gap:6px}
+}

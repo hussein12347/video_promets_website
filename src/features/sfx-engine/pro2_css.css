@@ -1,0 +1,23 @@
+<style id="pro2-css">
+.tr-h{margin:12px 2px 6px;font-size:12.5px;font-weight:700;color:var(--ink,inherit);display:flex;align-items:center;gap:6px}
+.tr-h small{font-weight:500;opacity:.55}
+.pn-trans.tr-grid{grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+.pn-trans .tr-b{display:flex;flex-direction:column;align-items:stretch;gap:5px;padding:5px;border-radius:10px;font-size:11.5px;text-align:center;line-height:1.25}
+.pn-trans .tr-b canvas{width:100%;height:auto;aspect-ratio:132/74;border-radius:6px;background:#000;display:block}
+.pn-trans .tr-b span{display:block;padding:0 2px 2px}
+.sd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:7px;margin:10px 0}
+.sd-it{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card)}
+.sd-play{flex:1;display:flex;align-items:center;gap:6px;padding:8px 9px;background:none;border:0;cursor:pointer;color:inherit;text-align:start;min-width:0}
+.sd-play:hover{background:color-mix(in srgb,var(--acc) 10%,var(--card))}
+.sd-ic{font-size:10px;color:var(--acc);flex:none}
+.sd-play b{font-size:12px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sd-play small{font-size:10px;opacity:.55;flex:none}
+.sd-add{flex:none;width:32px;border:0;border-inline-start:1px solid var(--line);background:color-mix(in srgb,var(--acc) 12%,var(--card));color:var(--acc);font-size:17px;cursor:pointer}
+.sd-add:hover{background:var(--acc);color:#fff}
+.sd-list{display:flex;flex-direction:column;gap:5px}
+.sd-row{display:flex;align-items:center;gap:8px;font-size:12px;padding:4px 6px;border:1px solid var(--line);border-radius:8px}
+.sd-row span{flex:1}.sd-row em{font-style:normal;opacity:.6;font-size:11px}
+.sd-mini{width:26px;height:26px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:inherit;cursor:pointer;font-size:11px}
+#sd-tr{width:100%;margin-top:6px}
+.mt-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.mt-card{min-width:0}.mt-card b,.mt-card small{max-width:100%}
+</style>

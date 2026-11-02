@@ -1,0 +1,12 @@
+<style id="aigen-css">
+.ai-mode{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ai-mode button{padding:8px 6px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);color:var(--ink);font:inherit;font-size:12.5px;cursor:pointer}
+.ai-mode button.on{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc);background:color-mix(in srgb,var(--acc) 8%,var(--card));font-weight:600}
+.ai-steps{margin:0;padding-inline-start:18px;display:flex;flex-direction:column;gap:6px;font-size:12.5px;line-height:1.6}
+.gn-list{display:flex;flex-direction:column;gap:8px;max-height:420px;overflow:auto}
+.gn-row{border:1px solid var(--line2);border-radius:var(--radius-sm);padding:8px;background:var(--card2);display:flex;flex-direction:column;gap:6px}
+.gn-row.ok{border-color:color-mix(in srgb,#2e9e5b 50%,var(--line2))}
+.gn-h{display:flex;gap:8px;align-items:center;font-size:12px}.gn-h i{margin-inline-start:auto;font-style:normal;color:var(--mut)}.gn-row.ok .gn-h i{color:#2e9e5b}
+.gn-p{font-size:11.5px;color:var(--mut);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;text-align:left}
+.gn-b{display:flex;gap:6px}
+</style>

@@ -1,0 +1,50 @@
+<style>
+/* ===== UX layer: touch targets, mobile tab bar, focus, motion, reading width ===== */
+:root{--tb-h:60px}
+/* keyboard: nav items are <a> without href — make the focus ring visible on them */
+.navitem:focus-visible{outline:2px solid var(--acc);outline-offset:-2px;border-radius:10px}
+/* reading width for long help text (never for tools/editor) */
+#main .hint,#main .page-sub,#main .sub{max-width:72ch}
+/* touch: comfortable tap targets everywhere except dense editor widgets */
+@media (pointer:coarse){
+  button:not(.mini):not([class*=tl-]):not(.icon-btn),select,.navitem{min-height:44px}
+  .icon-btn,button.icon,.cc-info,.fav-star{min-width:44px;min-height:44px}
+  input[type=checkbox],input[type=radio]{min-width:20px;min-height:20px}
+  select,input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]){min-height:44px}
+}
+/* mobile tab bar */
+#tabbar{display:none}
+@media (max-width:760px){
+  #topnav{display:none!important}
+  #tabbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;z-index:9000;left:0;right:0;bottom:0;height:calc(var(--tb-h) + env(safe-area-inset-bottom,0px));padding:0 6px env(safe-area-inset-bottom,0px);background:var(--card);border-top:1px solid var(--line);box-shadow:0 -6px 24px rgba(0,0,0,.10)}
+  #tabbar button{all:unset;box-sizing:border-box;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:44px;padding:6px 2px;font:600 11px/1.15 inherit;font-family:inherit;color:var(--mut);cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent}
+  #tabbar button .ic{font-size:20px;line-height:1;filter:grayscale(.55);opacity:.85;transition:transform .15s,filter .15s}
+  #tabbar button.on{color:var(--acc)}
+  #tabbar button.on .ic{filter:none;opacity:1;transform:translateY(-1px)}
+  #tabbar button.on::before{content:'';position:absolute;top:0;left:22%;right:22%;height:3px;border-radius:0 0 4px 4px;background:var(--acc)}
+  #tabbar button.cta .ic{display:grid;place-items:center;width:42px;height:42px;margin-top:-16px;border-radius:50%;background:var(--acc);color:var(--onacc,#fff);filter:none;opacity:1;font-size:21px;box-shadow:0 6px 16px color-mix(in srgb,var(--acc) 45%,transparent)}
+  #tabbar button.cta{color:var(--ink)}
+  #tabbar button:focus-visible{outline:2px solid var(--acc);outline-offset:-3px;border-radius:12px}
+  #main{padding-bottom:calc(var(--tb-h) + 18px + env(safe-area-inset-bottom,0px))!important}
+  body:has(#ed) #tabbar,body:has(#sidebar.open) #tabbar{display:none}
+  body:has(#ed) #main{padding-bottom:0!important}
+  /* language switcher lives in the top bar on phones */
+  html #lang-fab.in-bar{position:static;inset:auto;width:44px;height:44px;padding:0;margin-inline-start:auto;display:grid;place-items:center;border-radius:12px;box-shadow:none;font-size:18px;background:transparent;border:1px solid var(--line)}
+  #lang-fab.in-bar .ln{display:none}
+  html #lang-fab:not(.in-bar){bottom:calc(var(--tb-h) + 14px + env(safe-area-inset-bottom,0px))}
+  html #lang-menu{bottom:auto;top:60px;inset-inline-start:auto;inset-inline-end:10px;max-height:calc(100vh - 80px);overflow:auto}
+  html body:has(#ed) #lang-fab:not(.in-bar){bottom:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+
+/* ===== selected state: every chip / segmented button / option card shows clearly that it is chosen ===== */
+html #ed :is(.mt2-seg,.lk-row,.ai-mode,#sl-sens,#mk-scope,.mk-scope,#el-cats,.el-cats,#el-chips,.el-chips,#qr-gt,.seg,.mt-seg)>:is(button,.el-chip,.lk-chip).on,
+html #ed :is(.mt2-seg,.lk-row,.ai-mode,#sl-sens,#mk-scope,.mk-scope,#el-cats,.el-cats,#el-chips,.el-chips,#qr-gt,.seg,.mt-seg)>:is(button,.el-chip,.lk-chip)[aria-pressed="true"]{
+  background:color-mix(in srgb,var(--acc) 20%,var(--card));border-color:var(--acc);color:var(--ink);font-weight:800;box-shadow:0 0 0 2px color-mix(in srgb,var(--acc) 30%,transparent)}
+html #ed :is(.mt2-seg,.lk-row,.ai-mode,#sl-sens,#mk-scope,.mk-scope,#el-cats,.el-cats,#el-chips,.el-chips,.seg,.mt-seg)>.on::before{content:"✓";display:inline-block;margin-inline-end:6px;font-weight:900;color:var(--acc)}
+html #ed :is(.pa-st,.pa-lk,.sy-f,.cp-st,.ms-show-btn,.mt-card,.qr-bg,.src-tab).on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 14%,var(--card));box-shadow:0 0 0 2px color-mix(in srgb,var(--acc) 35%,transparent);position:relative}
+html #ed :is(.pa-st,.pa-lk,.sy-f,.cp-st,.ms-show-btn,.mt-card).on::after{content:"✓";position:absolute;top:6px;inset-inline-end:6px;width:20px;height:20px;border-radius:50%;background:var(--acc);color:#fff;font-size:12px;font-weight:900;display:grid;place-items:center;line-height:1}
+@media (forced-colors:active){html #ed .on{outline:2px solid Highlight}}
+</style>

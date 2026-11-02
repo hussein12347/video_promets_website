@@ -1,0 +1,15 @@
+h=open('/tmp/claude-0/mont/studio_m.html',encoding='utf-8').read()
+js=open('/tmp/claude-0/mont/aigen.js',encoding='utf-8').read(); css=open('/tmp/claude-0/mont/aigen.css',encoding='utf-8').read()
+def rep(old,new):
+    global h
+    assert h.count(old)==1,(h.count(old),old[:80]); h=h.replace(old,new)
+rep("const AI_IMG={id:null, goal:'EXPLAIN',","const AI_IMG={id:null, mode:'CUT', plate:'CLEAN', elems:'AUTO', depth:'YES', goal:'EXPLAIN',")
+rep("   `<div class=\"pn-sec\"><b>1) الصورة</b>","   `<div class=\"pn-sec\"><b>طريقة التحريك</b><div class=\"ai-mode\"><button type=\"button\" data-m=\"CUT\" class=\"${AI_IMG.mode==='CUT'?'on':''}\">✂️ قصّ من الصورة</button><button type=\"button\" data-m=\"GEN\" class=\"${AI_IMG.mode==='GEN'?'on':''}\">🎨 توليد طبقات جديدة (Flow)</button></div><p class=\"hint\">${AI_IMG.mode==='GEN'?'الذكاء الاصطناعي يرى صورتك ويكتب برومبتات لخلفية جديدة وعناصر منفصلة (تولّدها في Google Flow بالصورة كمرجع) ويصمّم حركتها بحرية كاملة.':'الحركة بتتبني من نفس بكسلات الصورة: قص ومعالم وكاميرا.'}</p></div>\n    <div class=\"pn-sec\"><b>1) الصورة</b>")
+rep("<button type=\"button\" class=\"pri pn-wide\" id=\"ai-copy\" ${cur?'':'disabled'}>📋 نسخ البرومبت (أرسله مع الصورة)</button>","${AI_IMG.mode==='GEN'?`<div class=\"pn-row3\"><label><span class=\"lbl\">الخلفية</span><select id=\"ai-plate\">${anOpt([['CLEAN','نفس المشهد بدون العناصر'],['EXTEND','تمديد الصورة لتملأ الإطار'],['REIMAGINE','خلفية جديدة بنفس الأسلوب']],AI_IMG.plate)}</select></label><label><span class=\"lbl\">عناصر/مشهد</span><select id=\"ai-elems\">${anOpt([['AUTO','تلقائي'],['2','حتى 2'],['4','حتى 4'],['6','حتى 6']],AI_IMG.elems)}</select></label><label><span class=\"lbl\">العمق</span><select id=\"ai-depth\">${anOpt([['YES','باراليكس'],['NO','بدون']],AI_IMG.depth)}</select></label></div>`:''}<button type=\"button\" class=\"pri pn-wide\" id=\"ai-copy\" ${cur?'':'disabled'}>${AI_IMG.mode==='GEN'?'📋 نسخ البرومبت (أرسله مع الصورة) — توليد طبقات':'📋 نسخ البرومبت (أرسله مع الصورة)'}</button>")
+rep("<div id=\"ai-res\"></div></div>`;","<div id=\"ai-res\"></div></div><div id=\"ai-gen\"></div>`;")
+rep("  $('#ai-copy').onclick=async()=>{ save(); const txt=await anAIPrompt(cur);","  $$('.ai-mode button',box).forEach(b=>b.onclick=()=>{ AI_IMG.mode=b.dataset.m; animRenderPanel(); });\n  ['plate','elems','depth'].forEach(k=>{ const el=$('#ai-'+k); if(el) el.onchange=()=>{ AI_IMG[k]=el.value; }; });\n  anAIGenCard(box);\n  $('#ai-copy').onclick=async()=>{ save(); const txt=AI_IMG.mode==='GEN'?await anAIPromptGen(cur):await anAIPrompt(cur);")
+rep("const raw=fix(JSON.parse(JSON.stringify(o))); raw.scene=base+k+1;","let raw=fix(JSON.parse(JSON.stringify(o))); const newNo=base+k+1; if(AI_IMG.mode==='GEN') raw=anAIGenRemap(raw,+o.scene||k+1,newNo,id); raw.scene=newNo;")
+rep("async function anAIBuild(id){",js+"\nasync function anAIBuild(id){")
+rep("</head>",css+"</head>")
+open('/tmp/claude-0/mont/serve/index.html','w',encoding='utf-8').write(h)
+open('/tmp/claude-0/mont/studio_g.html','w',encoding='utf-8').write(h)
